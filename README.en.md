@@ -36,7 +36,7 @@ The defaults are **350,000 tokens** for `WARNING` (checkpoint request) and **400
 | `WARNING` | `350000` | When Claude is asked to write `STATUS.md` and keep going. Lower it to checkpoint earlier. |
 | `LIMIT` | `400000` | When tools are blocked and the hook prepares the fresh session. Keep it above `WARNING`. |
 
-Both can also be overridden later with environment variables, without editing the script. Claude defines the exact variable names, so ask it to document them (see [Test before using](#test-before-using)).
+Both can also be overridden later with environment variables, without editing the script. Claude defines the exact variable names, so ask it to document them.
 
 ## Prompt to send to Claude
 
@@ -55,19 +55,3 @@ The script reads the transcript_path provided to the hook and gets the context s
 - Make WARNING and LIMIT configurable through environment variables, with one variable to disable automatic opening and another to only log without opening anything. On any script error, exit without doing anything.
 Show me how to test with low thresholds before using this for real.
 ```
-
-## Test before using
-
-Since Claude generates the implementation, it must define and document the variable names and log location. You can send this follow-up:
-
-```text
-Before enabling the hook, document the exact environment variable names and log location. Preserve existing hooks and settings.
-Show commands for my operating system to test with WARNING=1000 and LIMIT=2000, using the actual implemented variable names and starting a fresh Claude session with them.
-Start in log-only mode without opening tabs. Use a test transcript with known values to validate the thresholds without spending real tokens.
-Test: below WARNING; above WARNING with one warning per session; above LIMIT with tool blocking and narrowly scoped exceptions; stale STATUS.md; STATUS.md written after the limit; an active background process; automatic opening disabled; repeated Stop events; and invalid input without side effects.
-Do not run or terminate real processes to simulate these cases. Do not treat missing information as proof that no background processes are running; if this cannot be confirmed, do not open a new session.
-Then demonstrate that opening happens only once in a test session with no background processes, an updated STATUS.md, and automatic opening enabled.
-When finished, show how to restore WARNING=350000 and LIMIT=400000, leave log-only mode, and disable or remove the hook if needed.
-```
-
-The test numbers above describe desired values, not already implemented variable names. Tests and event support must be verified against the Claude Code and Orca versions used in your project. This repository does not include an executable implementation or previously validated integration tests.

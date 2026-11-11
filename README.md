@@ -36,7 +36,7 @@ Os padrões são **350.000 tokens** para o `AVISO` (pedido de checkpoint) e **40
 | `AVISO` | `350000` | Quando o Claude é instruído a escrever o `STATUS.md` e continuar. Reduza para fazer o checkpoint mais cedo. |
 | `LIMITE` | `400000` | Quando as ferramentas são bloqueadas e o hook prepara a nova sessão. Mantenha acima do `AVISO`. |
 
-Os dois também podem ser sobrescritos depois por variáveis de ambiente, sem editar o script. O Claude define os nomes exatos das variáveis, então peça que ele os documente (veja [Teste antes de usar](#teste-antes-de-usar)).
+Os dois também podem ser sobrescritos depois por variáveis de ambiente, sem editar o script. O Claude define os nomes exatos das variáveis, então peça que ele os documente.
 
 ## Prompt para enviar ao Claude
 
@@ -55,19 +55,3 @@ O script lê o transcript_path que vem no hook e pega o tamanho do contexto da �
 - AVISO e LIMITE configuráveis por variável de ambiente, uma variável pra desligar a abertura automática e outra pra só registrar num log sem abrir nada. Qualquer erro no script: sai sem fazer nada.
 Me mostre como testar com limites baixos antes de usar de verdade.
 ```
-
-## Teste antes de usar
-
-Como o Claude gera a implementação, os nomes das variáveis e o caminho do log devem ser definidos e documentados por ele. Você pode enviar este complemento:
-
-```text
-Antes de ativar o hook, documente os nomes exatos das variáveis de ambiente e o caminho do log. Preserve os hooks e as configurações existentes.
-Mostre os comandos adequados ao meu sistema para testar com AVISO=1000 e LIMITE=2000, usando os nomes reais das variáveis implementadas e iniciando uma nova sessão do Claude com elas.
-Comece no modo que só registra em log, sem abrir abas. Use um transcript de teste com valores conhecidos para validar os limiares sem precisar gastar tokens de verdade.
-Teste: abaixo de AVISO; acima de AVISO com aviso único por sessão; acima de LIMITE com bloqueio das ferramentas e exceções restritas; STATUS.md desatualizado; STATUS.md escrito após o limite; processo em segundo plano ativo; abertura automática desativada; evento Stop repetido; e entrada inválida sem efeitos colaterais.
-Não execute nem encerre processos reais para simular esses casos. Não considere a ausência de informação como prova de que não há processos em segundo plano; se não for possível confirmar, não abra uma nova sessão.
-Depois, comprove que a abertura acontece uma única vez em uma sessão de teste sem processos em segundo plano, com STATUS.md atualizado e abertura automática habilitada.
-Ao terminar, mostre como restaurar AVISO=350000 e LIMITE=400000, sair do modo de log e desativar ou remover o hook se necessário.
-```
-
-Os números de teste acima representam os valores desejados, não nomes de variáveis já implementadas. Os testes e o suporte aos eventos precisam ser verificados na versão do Claude Code e do Orca usada no seu projeto. Este repositório não inclui uma implementação executável ou testes de integração já validados.
